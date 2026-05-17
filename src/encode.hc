@@ -11,48 +11,42 @@ pub fun b64_encode_url(input: string) : string =>
 
 // Encode using a given alphabet, with optional padding
 pub fun encode_with(input: string, alphabet: string, pad: bool) : string {
-  let bytes = chars(input)
-  let encoded = encode_chars(bytes, alphabet)
+  let bytes = str_to_bytes(input)
+  let encoded = encode_bytes(bytes, alphabet)
   if pad { add_padding(encoded) }
   else { encoded }
 }
 
-// Process chars in groups of 3
-pub fun encode_chars(cs: list<char>, alphabet: string) : string =>
-  match cs {
+// Process bytes in groups of 3
+pub fun encode_bytes(bs: list<int>, alphabet: string) : string =>
+  match bs {
     [] => "",
     [a] => {
-      let n = ord(a)
-      let i0 = n / 4
-      let i1 = (n % 4) * 16
+      let i0 = a / 4
+      let i1 = (a % 4) * 16
       let c0 = alphabet[i0:i0 + 1]
       let c1 = alphabet[i1:i1 + 1]
       c0 + c1
     },
     [a, b] => {
-      let na = ord(a)
-      let nb = ord(b)
-      let i0 = na / 4
-      let i1 = (na % 4) * 16 + nb / 16
-      let i2 = (nb % 16) * 4
+      let i0 = a / 4
+      let i1 = (a % 4) * 16 + b / 16
+      let i2 = (b % 16) * 4
       let c0 = alphabet[i0:i0 + 1]
       let c1 = alphabet[i1:i1 + 1]
       let c2 = alphabet[i2:i2 + 1]
       c0 + c1 + c2
     },
     [a, b, c, ..rest] => {
-      let na = ord(a)
-      let nb = ord(b)
-      let nc = ord(c)
-      let i0 = na / 4
-      let i1 = (na % 4) * 16 + nb / 16
-      let i2 = (nb % 16) * 4 + nc / 64
-      let i3 = nc % 64
+      let i0 = a / 4
+      let i1 = (a % 4) * 16 + b / 16
+      let i2 = (b % 16) * 4 + c / 64
+      let i3 = c % 64
       let c0 = alphabet[i0:i0 + 1]
       let c1 = alphabet[i1:i1 + 1]
       let c2 = alphabet[i2:i2 + 1]
       let c3 = alphabet[i3:i3 + 1]
-      c0 + c1 + c2 + c3 + encode_chars(rest, alphabet)
+      c0 + c1 + c2 + c3 + encode_bytes(rest, alphabet)
     }
   }
 

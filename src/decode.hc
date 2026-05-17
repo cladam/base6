@@ -14,7 +14,8 @@ pub fun decode_with(input: string, alphabet: string) : result<string, string> {
   let cleaned = strip_padding(input)
   let indices = map(chars(cleaned), (c) => char_index(c, alphabet))
   if any(indices, (i) => i < 0) { Err("invalid base64 character") }
-  else { Ok(decode_indices(indices)) }
+  else if length(indices) % 4 == 1 { Err("invalid base64 length") }
+  else { Ok(bytes_to_str(decode_to_bytes(indices))) }
 }
 
 // Find character position in alphabet, -1 if not found
@@ -36,24 +37,17 @@ pub fun strip_padding(s: string) : string {
   from_chars(filtered)
 }
 
-// Decode groups of 4 indices back to bytes
-pub fun decode_indices(indices: list<int>) : string =>
+// Decode groups of 4 indices to byte values
+pub fun decode_to_bytes(indices: list<int>) =>
   match indices {
-    [] => "",
-    [a, b] => {
-      let byte0 = a * 4 + b / 16
-      from_chars([chr(byte0)])
-    },
-    [a, b, c] => {
-      let byte0 = a * 4 + b / 16
-      let byte1 = (b % 16) * 16 + c / 4
-      from_chars([chr(byte0), chr(byte1)])
-    },
+    [] => [],
+    [a, b] => [a * 4 + b / 16],
+    [a, b, c] => [a * 4 + b / 16, (b % 16) * 16 + c / 4],
     [a, b, c, d, ..rest] => {
       let byte0 = a * 4 + b / 16
       let byte1 = (b % 16) * 16 + c / 4
       let byte2 = (c % 4) * 64 + d
-      from_chars([chr(byte0), chr(byte1), chr(byte2)]) + decode_indices(rest)
+      concat([[byte0, byte1, byte2], decode_to_bytes(rest)])
     },
-    _ => ""
+    _ => []
   }
