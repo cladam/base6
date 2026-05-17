@@ -59,3 +59,51 @@ test "url-safe encode" {
   assert(str_contains(encoded, "/") == false)
   assert(str_contains(encoded, "=") == false)
 }
+
+// --- UTF-8 tests ---
+
+test "encode UTF-8 2-byte" {
+  assert(b64_encode("é") == "w6k=")
+}
+
+test "encode UTF-8 3-byte" {
+  assert(b64_encode("日") == "5pel")
+}
+
+test "encode UTF-8 mixed" {
+  assert(b64_encode("héllo") == "aMOpbGxv")
+}
+
+test "roundtrip UTF-8" {
+  let original = "héllo"
+  let encoded = b64_encode(original)
+  assert(b64_decode(encoded) == Ok(original))
+}
+
+test "roundtrip UTF-8 3-byte" {
+  let original = "日本語"
+  let encoded = b64_encode(original)
+  assert(b64_decode(encoded) == Ok(original))
+}
+
+// --- URL-safe decode tests ---
+
+test "url-safe decode" {
+  assert(b64_decode_url("Pj4-") == Ok(">>>"))
+}
+
+test "url-safe roundtrip" {
+  let original = ">>>"
+  let encoded = b64_encode_url(original)
+  assert(b64_decode_url(encoded) == Ok(original))
+}
+
+// --- Validation tests ---
+
+test "decode invalid length" {
+  let result = b64_decode("A")
+  match result {
+    Err(_) => assert(true),
+    Ok(_) => assert(false)
+  }
+}
