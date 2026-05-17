@@ -4,18 +4,22 @@ Base64 encoding and decoding library for [hica](https://cladam.github.io/hica).
 
 Pure functions, no effects — a showcase of hica's functional style.
 
-## Install
+## Installation
+
+Add as a git submodule to your hica project:
 
 ```sh
-# Add as a dependency (when hica package manager is available)
-hica add base64
+git submodule add https://github.com/cladam/base64.git lib/base64
 ```
 
+Then import the library:
+
+```rust
+import "./lib/base64/src/base64"
+```
 ## Usage
 
-```hica
-import "base64"
-
+```rust
 fun main() {
   let encoded = b64_encode("Hello, World!")
   println(encoded)  // SGVsbG8sIFdvcmxkIQ==
@@ -45,7 +49,7 @@ fun main() {
 
 ## Project Structure
 
-```
+```sh
 src/
   base64.hc    # barrel module (pub imports)
   types.hc     # alphabet constants

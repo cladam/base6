@@ -55,7 +55,7 @@ test "url-safe encode" {
   // URL-safe uses - and _ instead of + and /
   // and no padding
   let encoded = b64_encode_url("Hello, World!")
-  assert(find_in(encoded, "+", 0) == -1)
-  assert(find_in(encoded, "/", 0) == -1)
-  assert(find_in(encoded, "=", 0) == -1)
+  assert(str_contains(encoded, "+") == false)
+  assert(str_contains(encoded, "/") == false)
+  assert(str_contains(encoded, "=") == false)
 }
