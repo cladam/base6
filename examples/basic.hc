@@ -1,5 +1,5 @@
 // Example: base64 encoding and decoding
-import "src/base64"
+import "../src/base64"
 
 fun main() {
   // Encode

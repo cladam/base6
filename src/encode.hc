@@ -18,13 +18,13 @@ pub fun encode_with(input: string, alphabet: string, pad: bool) : string {
 }
 
 // Process chars in groups of 3
-fun encode_chars(cs: list<char>, alphabet: string) : string =>
+pub fun encode_chars(cs: list<char>, alphabet: string) : string =>
   match cs {
     [] => "",
     [a] => {
       let n = ord(a)
-      let i0 = n / 64
-      let i1 = (n % 64) * 16
+      let i0 = n / 4
+      let i1 = (n % 4) * 16
       let c0 = alphabet[i0:i0 + 1]
       let c1 = alphabet[i1:i1 + 1]
       c0 + c1
@@ -57,7 +57,7 @@ fun encode_chars(cs: list<char>, alphabet: string) : string =>
   }
 
 // Add = padding to make length a multiple of 4
-fun add_padding(s: string) : string {
+pub fun add_padding(s: string) : string {
   let remainder = str_length(s) % 4
   if remainder == 0 { s }
   else if remainder == 2 { s + "==" }

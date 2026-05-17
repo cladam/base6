@@ -18,26 +18,26 @@ pub fun decode_with(input: string, alphabet: string) : result<string, string> {
 }
 
 // Find character position in alphabet, -1 if not found
-fun char_index(c: char, alphabet: string) : int {
+pub fun char_index(c: char, alphabet: string) : int {
   let s = from_chars([c])
   find_in(alphabet, s, 0)
 }
 
-fun find_in(haystack: string, needle: string, pos: int) : int {
+pub fun find_in(haystack: string, needle: string, pos: int) : int {
   if pos >= str_length(haystack) { -1 }
   else if haystack[pos:pos + 1] == needle { pos }
   else { find_in(haystack, needle, pos + 1) }
 }
 
 // Strip = padding
-fun strip_padding(s: string) : string {
+pub fun strip_padding(s: string) : string {
   let cs = chars(s)
   let filtered = filter(cs, (c) => c != b64_pad())
   from_chars(filtered)
 }
 
 // Decode groups of 4 indices back to bytes
-fun decode_indices(indices: list<int>) : string =>
+pub fun decode_indices(indices: list<int>) : string =>
   match indices {
     [] => "",
     [a, b] => {
