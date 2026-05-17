@@ -25,4 +25,12 @@ fun main() {
     Ok(text) => println("Roundtrip decoded: " + text),
     Err(e) => println("Error: " + e)
   }
+
+  // UTF-8 support
+  let utf8 = b64_encode("café ☕")
+  println("UTF-8 encoded: " + utf8)
+  match b64_decode(utf8) {
+    Ok(text) => println("UTF-8 decoded: " + text),
+    Err(e) => println("Error: " + e)
+  }
 }
