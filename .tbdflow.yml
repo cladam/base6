@@ -28,16 +28,16 @@ radar:
   - '*-lock.*'
   - CHANGELOG.md
 ci_check:
-  enabled: false
+  enabled: true
 branch_types:
   fix: fix/
   docs: docs/
   chore: chore/
   refactor: refactor/
   ci: ci/
-  release: release_
+  release: release/
   feat: feat/
-  feature: feature_
+  feature: feature/
 automatic_tags:
   release_prefix: v
 lint:
